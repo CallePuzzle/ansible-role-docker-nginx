@@ -3,8 +3,6 @@ dependency:
   name: galaxy
 driver:
   name: docker
-lint:
-  name: yamllint
 platforms:
   - name: instance
     image: debian:stretch
@@ -15,11 +13,5 @@ platforms:
       - /usr/local/etc/haproxy/:/usr/local/etc/haproxy/
 provisioner:
   name: ansible
-  lint:
-    name: ansible-lint
-scenario:
-  name: docker
 verifier:
-  name: testinfra
-  lint:
-    name: flake8
+  name: ansible

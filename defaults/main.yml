@@ -1,4 +1,6 @@
 ---
-haproxy_links: []
-haproxy_ports: []
-haproxy_cfg_template_path: ""
+nginx_links: []
+nginx_conf_d_templates: []
+nginx_remove_default_site: true
+nginx_version: latest
+nginx_environments: {}

@@ -1,26 +1,28 @@
 ---
-- name: Create /usr/local/etc/haproxy dir
+- name: Create /usr/local/nginx_templates dir
   file:
-    path: /usr/local/etc/haproxy
+    path: /usr/local/nginx_templates
     state: directory
     mode: 0755
 
-- name: Copy haproxy config
+- name: Copy nginx templates
   template:
-    src: "{{ haproxy_cfg_template_path }}haproxy.cfg.j2"
-    dest: /usr/local/etc/haproxy/haproxy.cfg
+    src: "{{ item }}"
+    dest: "/usr/local/nginx_templates/{{ item }}"
+  loop: "{{ nginx_conf_d_templates }}"
 
-- name: Run haproxy
+- name: Run nginx
   docker_container:
-    name: haproxy
+    name: nginx
     restart_policy: always
-    image: "haproxy:{{ haproxy_version }}"
-    restart: "{{ haproxy_restart | default(false) }}"
+    image: "nginx:{{ nginx_version }}"
+    restart: "{{ nginx_restart | default(false) }}"
     volumes:
-      - /usr/local/etc/haproxy:/usr/local/etc/haproxy:ro
-    links: "{{ haproxy_links | default(omit) }}"
-    ports: "{{ haproxy_ports | default(omit) }}"
-    log_driver: "{{ haproxy_log_driver | default(omit) }}"
-    log_options: "{{ haproxy_log_options | default(omit) }}"
+      - /usr/local/nginx_templates:/etc/nginx/templates
+    env: "{{ nginx_environments }}"
+    links: "{{ nginx_links | default(omit) }}"
+    ports: "{{ nginx_ports | default(omit) }}"
+    log_driver: "{{ nginx_log_driver | default(omit) }}"
+    log_options: "{{ nginx_log_options | default(omit) }}"
   tags:
-    - run-haproxy
+    - run-nginx

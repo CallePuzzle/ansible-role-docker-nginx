@@ -10,12 +10,12 @@ dependencies:
 
 galaxy_info:
   author: César M. Cristóbal
-  description: Installs haproxy containerized
+  description: Installs nginx  containerized
   company: "Callepuzzle"
   license: "license (GNU v3)"
   min_ansible_version: 2.7
   galaxy_tags:
-    - haproxy
+    - nginx
     - docker
     - container
   platforms:

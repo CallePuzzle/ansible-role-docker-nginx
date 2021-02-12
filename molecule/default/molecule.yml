@@ -5,8 +5,6 @@ driver:
   name: vagrant
   provider:
     name: virtualbox
-lint:
-  name: yamllint
 platforms:
   - name: instance
     box: debian/stretch64
@@ -17,11 +15,5 @@ platforms:
         ip: 192.168.56.20
 provisioner:
   name: ansible
-  lint:
-    name: ansible-lint
-scenario:
-  name: vagrant
 verifier:
-  name: testinfra
-  lint:
-    name: flake8
+  name: ansible

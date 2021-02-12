@@ -1,6 +1,1 @@
----
-- name: geerlingguy.pip
-  src: geerlingguy.pip
-
-- name: geerlingguy.docker
-  src: geerlingguy.docker
+../requirements.yml

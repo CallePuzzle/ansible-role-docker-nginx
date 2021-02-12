@@ -1,38 +1,37 @@
 ---
 - name: Converge
   hosts: all
-  become: true
-  become_method: sudo
 
   vars:
+    pip_install_packages:
+      - name: docker
     molecule_scenario_no_deps: true
-    haproxy_cfg_template_path: "{{ playbook_dir }}/templates/"
-    haproxy_links:
-      - httpd-docker
-    haproxy_ports:
+    nginx_links:
+      - httpd
+    nginx_ports:
       - 80:80
+  tasks:
+    - name: apt update
+      apt:
+        update_cache: yes
 
-  pre_tasks:
     - import_role:
         name: geerlingguy.pip
 
     - name: Start httpd
       docker_container:
-        name: httpd-docker
+        name: httpd
         restart_policy: always
         image: httpd:2.4
-    - debug:
-        var: haproxy_cfg_template_path
+    - name: "Include ansible-role-docker-nginx"
+      include_role:
+        name: "ansible-role-docker-nginx"
 
-  roles:
-    - { role: ansible-role-docker-haproxy, tags: ['haproxy'] }
-
-  tasks:
     - name: Download test localhost
       uri:
         url: http://localhost
         return_content: true
       register: this
-      failed_when: "'It works!' not in this.content"
+      failed_when: "'Welcome to nginx!' not in this.content"
       delegate_to: localhost
       become: false
