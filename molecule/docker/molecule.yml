@@ -1,0 +1,25 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  - name: instance
+    image: debian:stretch
+    privileged: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/local/etc/haproxy/:/usr/local/etc/haproxy/
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+scenario:
+  name: docker
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

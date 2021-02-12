@@ -1,0 +1,26 @@
+---
+- name: Create /usr/local/etc/haproxy dir
+  file:
+    path: /usr/local/etc/haproxy
+    state: directory
+    mode: 0755
+
+- name: Copy haproxy config
+  template:
+    src: "{{ haproxy_cfg_template_path }}haproxy.cfg.j2"
+    dest: /usr/local/etc/haproxy/haproxy.cfg
+
+- name: Run haproxy
+  docker_container:
+    name: haproxy
+    restart_policy: always
+    image: "haproxy:{{ haproxy_version }}"
+    restart: "{{ haproxy_restart | default(false) }}"
+    volumes:
+      - /usr/local/etc/haproxy:/usr/local/etc/haproxy:ro
+    links: "{{ haproxy_links | default(omit) }}"
+    ports: "{{ haproxy_ports | default(omit) }}"
+    log_driver: "{{ haproxy_log_driver | default(omit) }}"
+    log_options: "{{ haproxy_log_options | default(omit) }}"
+  tags:
+    - run-haproxy

@@ -1,0 +1,24 @@
+---
+dependencies:
+  - name: geerlingguy.pip
+    src: geerlingguy.pip
+    when: molecule_scenario_no_deps is not defined
+
+  - name: geerlingguy.docker
+    src: geerlingguy.docker
+    when: molecule_scenario_no_deps is not defined
+
+galaxy_info:
+  author: César M. Cristóbal
+  description: Installs haproxy containerized
+  company: "Callepuzzle"
+  license: "license (GNU v3)"
+  min_ansible_version: 2.7
+  galaxy_tags:
+    - haproxy
+    - docker
+    - container
+  platforms:
+    - name: Debian
+      versions:
+        - stretch

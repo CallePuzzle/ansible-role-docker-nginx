@@ -1,0 +1,38 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  become_method: sudo
+
+  vars:
+    molecule_scenario_no_deps: true
+    haproxy_cfg_template_path: "{{ playbook_dir }}/templates/"
+    haproxy_links:
+      - httpd-docker
+    haproxy_ports:
+      - 80:80
+
+  pre_tasks:
+    - import_role:
+        name: geerlingguy.pip
+
+    - name: Start httpd
+      docker_container:
+        name: httpd-docker
+        restart_policy: always
+        image: httpd:2.4
+    - debug:
+        var: haproxy_cfg_template_path
+
+  roles:
+    - { role: ansible-role-docker-haproxy, tags: ['haproxy'] }
+
+  tasks:
+    - name: Download test localhost
+      uri:
+        url: http://localhost
+        return_content: true
+      register: this
+      failed_when: "'It works!' not in this.content"
+      delegate_to: localhost
+      become: false

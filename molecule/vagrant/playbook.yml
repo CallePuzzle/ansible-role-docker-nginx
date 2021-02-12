@@ -1,0 +1,35 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  become_method: sudo
+
+  vars:
+    haproxy_links:
+      - httpd
+    haproxy_ports:
+      - 80:80
+
+  pre_tasks:
+    - import_role:
+        name: geerlingguy.pip
+
+    - import_role:
+        name: geerlingguy.docker
+
+    - name: Start httpd
+      docker_container:
+        name: httpd
+        restart_policy: always
+        image: httpd:2.4
+
+  roles:
+    - { role: ansible-role-docker-haproxy, tags: ['haproxy'] }
+
+  tasks:
+    - name: Download test localhost
+      uri:
+        url: http://localhost
+        return_content: true
+      register: this
+      failed_when: "'It works!' not in this.content"

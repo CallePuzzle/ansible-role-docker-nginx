@@ -1,0 +1,25 @@
+---
+name: Test
+
+on:
+  push:
+    branches:
+      - '*'
+      - '!master'
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+
+      - name: Update pip, install molecule, test
+        run: |
+          python -m pip install --upgrade pip
+          pip install "molecule[docker] <3"
+          molecule test -s docker
