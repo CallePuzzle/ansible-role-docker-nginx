@@ -5,13 +5,21 @@
   become_method: sudo
 
   vars:
+    molecule_scenario_no_deps: true
     pip_install_packages:
       - name: docker
     nginx_links:
       - httpd
     nginx_ports:
       - 80:80
+    nginx_conf_d_templates:
+      - default.conf
+
   tasks:
+    - name: apt update
+      apt:
+        update_cache: yes
+
     - import_role:
         name: geerlingguy.pip
 

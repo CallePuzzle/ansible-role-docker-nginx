@@ -3,13 +3,14 @@
   hosts: all
 
   vars:
-    pip_install_packages:
-      - name: docker
     molecule_scenario_no_deps: true
+    pip_install_packages:
+      - name:
     nginx_links:
       - httpd
     nginx_ports:
       - 80:80
+
   tasks:
     - name: apt update
       apt:

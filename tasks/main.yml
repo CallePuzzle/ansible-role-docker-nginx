@@ -8,15 +8,16 @@
 - name: Copy nginx templates
   template:
     src: "{{ item }}"
-    dest: "/usr/local/nginx_templates/{{ item }}"
+    dest: "/usr/local/nginx_templates/{{ item }}.template"
   loop: "{{ nginx_conf_d_templates }}"
+  register: nginx_restart
 
 - name: Run nginx
   docker_container:
     name: nginx
     restart_policy: always
     image: "nginx:{{ nginx_version }}"
-    restart: "{{ nginx_restart | default(false) }}"
+    restart: "{{ nginx_restart.changed | default(false) }}"
     volumes:
       - /usr/local/nginx_templates:/etc/nginx/templates
     env: "{{ nginx_environments }}"
